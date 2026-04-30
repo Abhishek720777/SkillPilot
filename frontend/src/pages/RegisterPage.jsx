@@ -67,14 +67,14 @@ export default function RegisterPage() {
         <div className="auth-left-inner">
           <div className="auth-brand">
             <div className="auth-brand-icon">
-              <svg viewBox="0 0 20 20" fill="white" width="18" height="18"><path d="M10 1L12.5 7.5H19L13.5 11.5L15.5 18.5L10 14.5L4.5 18.5L6.5 11.5L1 7.5H7.5L10 1Z"/></svg>
+              <svg viewBox="0 0 20 20" fill="white" width="18" height="18"><path d="M10 1L12.5 7.5H19L13.5 11.5L15.5 18.5L10 14.5L4.5 18.5L6.5 11.5L1 7.5H7.5L10 1Z" /></svg>
             </div>
-            <span className="auth-brand-name">QuizBattle</span>
+            <span className="auth-brand-name">SkillPilot</span>
           </div>
-          <h1 className="auth-headline">Learn, compete,<br/>improve.</h1>
+          <h1 className="auth-headline">Learn, compete,<br />improve.</h1>
           <p className="auth-tagline">Practice adaptive quizzes. Battle friends in real time. Track every improvement.</p>
           <ul className="auth-features">
-            {['Non-repeating questions based on your history','Real-time battles with score and timing','Weak area detection per subtopic','Global leaderboard rankings'].map(f => (
+            {['Non-repeating questions based on your history', 'Real-time battles with score and timing', 'Weak area detection per subtopic', 'Global leaderboard rankings'].map(f => (
               <li key={f}><span className="auth-feat-dot" />{f}</li>
             ))}
           </ul>
@@ -105,7 +105,7 @@ export default function RegisterPage() {
               {form.password && (
                 <div className="pw-strength">
                   <div className="pw-bars">
-                    {[1,2,3,4].map(i => (
+                    {[1, 2, 3, 4].map(i => (
                       <div key={i} className="pw-bar" style={{ background: i <= strength.score ? strength.color : 'var(--border)' }} />
                     ))}
                   </div>

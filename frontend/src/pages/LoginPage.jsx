@@ -46,14 +46,14 @@ export default function LoginPage() {
         <div className="auth-left-inner">
           <div className="auth-brand">
             <div className="auth-brand-icon">
-              <svg viewBox="0 0 20 20" fill="white" width="18" height="18"><path d="M10 1L12.5 7.5H19L13.5 11.5L15.5 18.5L10 14.5L4.5 18.5L6.5 11.5L1 7.5H7.5L10 1Z"/></svg>
+              <svg viewBox="0 0 20 20" fill="white" width="18" height="18"><path d="M10 1L12.5 7.5H19L13.5 11.5L15.5 18.5L10 14.5L4.5 18.5L6.5 11.5L1 7.5H7.5L10 1Z" /></svg>
             </div>
-            <span className="auth-brand-name">QuizBattle</span>
+            <span className="auth-brand-name">SkillPilot</span>
           </div>
-          <h1 className="auth-headline">Learn, compete,<br/>improve.</h1>
+          <h1 className="auth-headline">Learn, compete,<br />improve.</h1>
           <p className="auth-tagline">The platform built for learners who want to measure and beat their limits.</p>
           <ul className="auth-features">
-            {['Java, Python, Databases, Aptitude & more','Live battle rooms — same questions, different speeds','Per-subtopic accuracy tracking','Global rankings and challenge history'].map(f => (
+            {['Java, Python, Databases, Aptitude & more', 'Live battle rooms — same questions, different speeds', 'Per-subtopic accuracy tracking', 'Global rankings and challenge history'].map(f => (
               <li key={f}><span className="auth-feat-dot" />{f}</li>
             ))}
           </ul>
