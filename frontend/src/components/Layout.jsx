@@ -19,6 +19,7 @@ export default function Layout() {
   const initial = user?.username?.[0]?.toUpperCase() || '?';
   const [requests, setRequests] = useState([]);
   const [showBell, setShowBell] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Normalize a request to always have a consistent 'id' field regardless of source
   const normalizeReq = (r) => ({ ...r, id: String(r._id || r.userId) });
@@ -48,18 +49,17 @@ export default function Layout() {
 
   return (
     <div className="layout">
-      <aside className="sidebar">
+      {sidebarOpen && <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />}
+      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-logo">
-          <div className="sidebar-logo-mark">
-            <svg viewBox="0 0 16 16" fill="white"><path d="M8 1L10 6H15L11 9.5L12.5 15L8 12L3.5 15L5 9.5L1 6H6L8 1Z" /></svg>
-          </div>
+          <img src="/logo.png" alt="SkillPilot" style={{ width: '32px', height: '32px', objectFit: 'contain', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }} />
           <span className="sidebar-logo-name">Skill<span>Pilot</span></span>
         </div>
 
         <nav className="sidebar-nav">
           <span className="nav-section-label">Navigation</span>
           {NAV.map(({ to, label, icon }) => (
-            <NavLink key={to} to={to} className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
+            <NavLink key={to} to={to} onClick={() => setSidebarOpen(false)} className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
               <span className="nav-icon">{icon}</span>
               {label}
             </NavLink>
@@ -84,11 +84,11 @@ export default function Layout() {
       </aside>
 
       <main className="main-content">
-        <div style={{
-          display: 'flex', justifyContent: 'flex-end', alignItems: 'center',
-          height: 60, borderBottom: '1px solid var(--border)', padding: '0 24px',
-          background: 'var(--bg-subtle)'
-        }}>
+        <div className="topbar">
+          <button className="mobile-menu-btn" onClick={() => setSidebarOpen(true)}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          
           <div style={{ position: 'relative' }}>
              <button className="btn btn-ghost btn-sm" style={{ padding: '8px' }} onClick={() => setShowBell(!showBell)}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>

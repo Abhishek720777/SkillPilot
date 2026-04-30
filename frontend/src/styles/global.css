@@ -1307,4 +1307,22 @@ select.form-input {
   .profile-page {
     padding: 20px 16px;
   }
+  
+  /* Additional mobile styles */
+  .page { padding: 16px; }
+  .practice-topic-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .quiz-wrap { padding: 16px; }
+  .quiz-card { padding: 20px; }
+
+  /* Chat mobile styles */
+  .chat-layout { flex-direction: column; height: calc(100vh - 60px); }
+  .chat-list { width: 100%; height: 35vh; border-right: none; border-bottom: 1px solid var(--border); }
+  .chat-main { height: 65vh; }
+  .chat-msg { max-width: 85%; }
+  .chat-msgs { padding: 12px; }
+  .chat-main-header { padding: 10px 14px; }
+}
+
+@media (max-width: 480px) {
+  .practice-topic-grid { grid-template-columns: 1fr; }
 }

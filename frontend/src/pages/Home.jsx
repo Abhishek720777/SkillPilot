@@ -311,15 +311,15 @@ const Home = () => {
         <div className="hf-inner">
           <div className="hf-brand">
             <Zap size={14} fill="currentColor" className="hn-icon" />
-            <span>QuizBattle</span>
+            <span>SkillPilot</span>
           </div>
           <div className="hf-links">
-            <span>Platform</span>
-            <span>Company</span>
-            <span>Careers</span>
-            <span>Legal</span>
+            <a href="https://github.com/Abhishek720777/SkillPilot" target="_blank" rel="noreferrer" style={{color: 'inherit', textDecoration: 'none'}}>GitHub</a>
+            <span>About Project</span>
+            <span>Developer Portfolio</span>
+            <span>Contact</span>
           </div>
-          <p className="hf-copy">© 2026 QuizBattle</p>
+          <p className="hf-copy">© 2026 SkillPilot. A student project.</p>
         </div>
       </footer>
     </div>
