@@ -4,9 +4,8 @@ let socket = null;
 
 export function getSocket() {
   if (!socket) {
-    const token = localStorage.getItem('token');
     socket = io('/', {
-      auth: { token },
+      withCredentials: true,
       autoConnect: true,
     });
   }

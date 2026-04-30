@@ -9,7 +9,15 @@ const battleRooms = new Map();
 
 module.exports = function setupSocketHandlers(io) {
   io.use((socket, next) => {
-    const token = socket.handshake.auth.token;
+    let token = socket.handshake.auth?.token;
+    if (!token && socket.request.headers.cookie) {
+      const cookies = socket.request.headers.cookie.split(';').reduce((res, c) => {
+        const [key, val] = c.trim().split('=');
+        res[key] = val;
+        return res;
+      }, {});
+      token = cookies.token;
+    }
     if (!token) return next(new Error('Authentication error'));
     try {
       const d = jwt.verify(token, JWT_SECRET);

@@ -5,12 +5,13 @@ const userSchema = new mongoose.Schema(
     profileId: { type: String, unique: true },
     username: { type: String, unique: true, required: true, trim: true },
     email: { type: String, unique: true, required: true, lowercase: true },
-    passwordHash: { type: String, required: true },
+    passwordHash: { type: String },
+    googleId: { type: String, unique: true, sparse: true },
     avatarColor: { type: String, default: "#4F46E5" },
     exp: { type: Number, default: 0 },
     expHistory: [{ date: { type: String }, exp: { type: Number }, source: { type: String } }],
     activityLog: [{
-      date: { type: String }, // YYYY-MM-DD format
+      date: { type: String },
       count: { type: Number, default: 1 }
     }],
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],

@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { JWT_SECRET } = require('../middleware/auth');
+const { OAuth2Client } = require('google-auth-library');
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 router.post('/register', async (req, res) => {
   try {
@@ -15,7 +17,8 @@ router.post('/register', async (req, res) => {
     const avatarColor = colors[Math.floor(Math.random() * colors.length)];
     const user = await User.create({ username, email, passwordHash, avatarColor });
     const token = jwt.sign({ userId: user._id, username }, JWT_SECRET, { expiresIn: '7d' });
-    res.json({ token, user: { id: user._id, profileId: user.profileId, username, email, avatarColor, exp: user.exp || 0 } });
+    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 });
+    res.json({ user: { id: user._id, profileId: user.profileId, username, email, avatarColor, exp: user.exp || 0 } });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -28,7 +31,8 @@ router.post('/login', async (req, res) => {
     const valid = await bcrypt.compare(password, user.passwordHash);
     if (!valid) return res.status(401).json({ error: 'Invalid credentials.' });
     const token = jwt.sign({ userId: user._id, username: user.username }, JWT_SECRET, { expiresIn: '7d' });
-    res.json({ token, user: { id: user._id, profileId: user.profileId, username: user.username, email: user.email, avatarColor: user.avatarColor, exp: user.exp || 0 } });
+    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 });
+    res.json({ user: { id: user._id, profileId: user.profileId, username: user.username, email: user.email, avatarColor: user.avatarColor, exp: user.exp || 0 } });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -131,6 +135,66 @@ router.post('/reset-password', async (req, res) => {
     res.json({ success: true, message: 'Password reset successful.' });
   } catch (e) {
     res.status(500).json({ error: e.message });
+  }
+});
+
+router.get('/me', async (req, res) => {
+  const token = req.cookies?.token;
+  if (!token) return res.status(401).json({ error: 'Not authenticated' });
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const user = await User.findById(decoded.userId);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    res.json({ user: { id: user._id, profileId: user.profileId, username: user.username, email: user.email, avatarColor: user.avatarColor, exp: user.exp || 0 } });
+  } catch (err) {
+    res.status(401).json({ error: 'Invalid token' });
+  }
+});
+
+router.post('/logout', (req, res) => {
+  res.clearCookie('token');
+  res.json({ success: true });
+});
+
+router.post('/google', async (req, res) => {
+  try {
+    const { credential } = req.body;
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID
+    });
+    const payload = ticket.getPayload();
+    const { email, name, sub } = payload;
+    
+    let user = await User.findOne({ email: email.toLowerCase() });
+    
+    if (!user) {
+      const colors = ['#4F46E5','#7C3AED','#0891B2','#059669','#D97706','#DC2626'];
+      const avatarColor = colors[Math.floor(Math.random() * colors.length)];
+      const baseUsername = name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() || 'user';
+      let username = baseUsername;
+      let count = 1;
+      while (await User.findOne({ username })) {
+        username = baseUsername + count;
+        count++;
+      }
+      user = await User.create({
+        username,
+        email: email.toLowerCase(),
+        googleId: sub,
+        avatarColor
+      });
+    } else if (!user.googleId) {
+      user.googleId = sub;
+      await user.save();
+    }
+    
+    const token = jwt.sign({ userId: user._id, username: user.username }, JWT_SECRET, { expiresIn: '7d' });
+    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 });
+    res.json({ user: { id: user._id, profileId: user.profileId, username: user.username, email: user.email, avatarColor: user.avatarColor, exp: user.exp || 0 } });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Google authentication failed' });
   }
 });
 

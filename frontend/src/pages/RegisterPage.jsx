@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/client';
 import '../styles/auth.css';
@@ -38,11 +39,26 @@ export default function RegisterPage() {
     setError(''); setLoading(true);
     try {
       const { data } = await api.post('/auth/register', { username: form.username, email: form.email, password: form.password });
-      login(data.token, data.user);
+      login(data.user);
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.error || 'Registration failed.');
     } finally { setLoading(false); }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      setLoading(true);
+      const { data } = await api.post('/auth/google', {
+        credential: credentialResponse.credential
+      });
+      login(data.user);
+      navigate('/dashboard');
+    } catch (err) {
+      setError('Google signup failed.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -108,6 +124,24 @@ export default function RegisterPage() {
             <button type="submit" className="btn btn-primary btn-lg auth-btn" disabled={loading}>
               {loading ? <><div className="spinner" /> Creating account…</> : 'Create account'}
             </button>
+
+            <div style={{ margin: '20px 0', display: 'flex', alignItems: 'center', textAlign: 'center', color: 'var(--text-muted)' }}>
+              <div style={{ flex: 1, borderBottom: '1px solid var(--border-color)' }}></div>
+              <span style={{ padding: '0 10px', fontSize: '14px', fontWeight: '500' }}>or</span>
+              <div style={{ flex: 1, borderBottom: '1px solid var(--border-color)' }}></div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => setError('Google Sign Up Failed')}
+                theme="outline"
+                size="large"
+                shape="rectangular"
+                width="100%"
+                text="signup_with"
+              />
+            </div>
           </form>
         </div>
       </div>
