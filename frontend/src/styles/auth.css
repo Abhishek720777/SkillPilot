@@ -1,0 +1,92 @@
+.auth-layout {
+  min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr;
+  background: #fff;
+}
+
+.auth-left {
+  background: var(--sidebar-bg);
+  display: flex; align-items: center; justify-content: center;
+  padding: 56px; position: relative; overflow: hidden;
+}
+.auth-left::before {
+  content: ''; position: absolute; top: -100px; right: -100px;
+  width: 400px; height: 400px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%);
+}
+.auth-left::after {
+  content: ''; position: absolute; bottom: -80px; left: -60px;
+  width: 320px; height: 320px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%);
+}
+.auth-left-inner { position: relative; z-index: 1; max-width: 360px; }
+
+.auth-brand {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 40px;
+}
+.auth-brand-icon {
+  width: 34px; height: 34px; background: var(--primary);
+  border-radius: 9px; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 12px rgba(79,70,229,0.35);
+}
+.auth-brand-name {
+  font-size: 16px; font-weight: 800; color: white; letter-spacing: -0.03em;
+}
+
+.auth-headline {
+  font-size: 34px; font-weight: 800; color: white;
+  line-height: 1.15; letter-spacing: -0.04em; margin-bottom: 14px;
+}
+
+.auth-tagline {
+  font-size: 14px; color: rgba(255,255,255,0.45);
+  line-height: 1.65; margin-bottom: 32px; font-weight: 400;
+}
+
+.auth-features {
+  list-style: none; display: flex; flex-direction: column; gap: 12px;
+}
+.auth-features li {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; color: rgba(255,255,255,0.55); font-weight: 400;
+}
+.auth-feat-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #818CF8; flex-shrink: 0;
+}
+
+/* Right side */
+.auth-right {
+  display: flex; align-items: center; justify-content: center;
+  padding: 48px; background: white;
+}
+.auth-form-wrap { width: 100%; max-width: 380px; animation: fadeUp 0.3s ease both; }
+
+.auth-form-header {
+  margin-bottom: 28px;
+}
+.auth-form-header h2 {
+  font-size: 24px; font-weight: 800; color: var(--text-primary);
+  letter-spacing: -0.04em; margin-bottom: 4px;
+}
+.auth-form-header p {
+  font-size: 13px; color: var(--text-muted);
+}
+.auth-form-header a {
+  color: var(--primary); font-weight: 600;
+}
+.auth-form-header a:hover { text-decoration: underline; }
+
+.auth-form { display: flex; flex-direction: column; gap: 16px; }
+
+.auth-btn { width: 100%; justify-content: center; margin-top: 4px; }
+
+/* Password strength */
+.pw-strength {
+  display: flex; align-items: center; gap: 8px; margin-top: 6px;
+}
+.pw-bars {
+  display: flex; gap: 3px; flex: 1;
+}
+.pw-bar {
+  flex: 1; height: 3px; border-radius: 99px; transition: background 0.2s;
+}
