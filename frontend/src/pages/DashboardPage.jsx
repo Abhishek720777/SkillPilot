@@ -1,8 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/client';
+
+// Lazy load heavy chart library
+const LineChart = lazy(() => import('recharts').then(m => ({ default: m.LineChart })));
+const Line = lazy(() => import('recharts').then(m => ({ default: m.Line })));
+const XAxis = lazy(() => import('recharts').then(m => ({ default: m.XAxis })));
+const YAxis = lazy(() => import('recharts').then(m => ({ default: m.YAxis })));
+const Tooltip = lazy(() => import('recharts').then(m => ({ default: m.Tooltip })));
+const ResponsiveContainer = lazy(() => import('recharts').then(m => ({ default: m.ResponsiveContainer })));
+const CartesianGrid = lazy(() => import('recharts').then(m => ({ default: m.CartesianGrid })));
 
 export default function DashboardPage() {
   const { user, updateUser } = useAuth();
@@ -143,20 +151,22 @@ export default function DashboardPage() {
             <div className="empty-state" style={{ padding: '20px 0' }}><p>Complete quizzes and battles to begin progressing your EXP rating</p></div>
           ) : (
             <div style={{ height: 160 }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={expData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
-                  <XAxis dataKey="date" hide />
-                  <YAxis tick={{ fontSize: 10, fill: '#9CA3AF' }} width={35} />
-                  <Tooltip contentStyle={{ background: 'white', border: '1px solid #E5E7EB', borderRadius: 8, fontSize: 12, boxShadow: 'var(--shadow-md)' }} formatter={v => [`${v} XP`, 'Level']} />
-                  <Line type="monotone" dataKey="exp" stroke="#F59E0B" strokeWidth={3}
-                    dot={(props) => {
-                      if (props.payload?.date === 'Start') return <g key={props.key} />;
-                      return <circle key={props.key} cx={props.cx} cy={props.cy} r={4} fill="#F59E0B" stroke="none" />;
-                    }}
-                    activeDot={{ r: 6 }} />
-                </LineChart>
-              </ResponsiveContainer>
+              <Suspense fallback={<div className="spinner spinner-primary" style={{ width: 20, height: 20, margin: '60px auto' }} />}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={expData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
+                    <XAxis dataKey="date" hide />
+                    <YAxis tick={{ fontSize: 10, fill: '#9CA3AF' }} width={35} />
+                    <Tooltip contentStyle={{ background: 'white', border: '1px solid #E5E7EB', borderRadius: 8, fontSize: 12, boxShadow: 'var(--shadow-md)' }} formatter={v => [`${v} XP`, 'Level']} />
+                    <Line type="monotone" dataKey="exp" stroke="#F59E0B" strokeWidth={3}
+                      dot={(props) => {
+                        if (props.payload?.date === 'Start') return <g key={props.key} />;
+                        return <circle key={props.key} cx={props.cx} cy={props.cy} r={4} fill="#F59E0B" stroke="none" />;
+                      }}
+                      activeDot={{ r: 6 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </Suspense>
             </div>
           )}
         </div>

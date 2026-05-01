@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/client';
 import { getSocket } from '../socket/socket';
-import CodeEditor from '../components/CodeEditor';
 import CodeBlock from '../components/CodeBlock';
+
+const CodeEditor = lazy(() => import('../components/CodeEditor'));
 
 const KEYS = ['A','B','C','D'];
 
@@ -380,11 +381,13 @@ export default function BattleRoomPage() {
 
             {q.isExecutionTask && (
                <div style={{ height: '560px', flex: 1, borderTop: '1px solid var(--border)', paddingTop: '16px' }}>
-                  <CodeEditor 
-                    initialCode={q.codeSnippet || '// Write your solution here'} 
-                    testCases={q.testCases}
-                    onRun={handleCodeRun}
-                  />
+                  <Suspense fallback={<div className="empty-state">Loading Battle Engine...</div>}>
+                    <CodeEditor 
+                      initialCode={q.codeSnippet || '// Write your solution here'} 
+                      testCases={q.testCases}
+                      onRun={handleCodeRun}
+                    />
+                  </Suspense>
                </div>
             )}
 

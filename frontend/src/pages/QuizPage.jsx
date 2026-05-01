@@ -1,8 +1,10 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import api from '../api/client';
-import CodeEditor from '../components/CodeEditor';
 import CodeBlock from '../components/CodeBlock';
+
+// Lazy load the heavy code editor
+const CodeEditor = lazy(() => import('../components/CodeEditor'));
 
 const KEYS = ['A','B','C','D'];
 
@@ -145,12 +147,14 @@ export default function QuizPage() {
 
         {q?.isExecutionTask && (
           <div style={{ height:'560px', width:'100%', borderTop:'1px solid var(--border)', paddingTop:'16px' }}>
-            <CodeEditor
-              initialCode={q.codeSnippet || '// Write your solution here'}
-              testCases={q.testCases}
-              onRun={handleCodeRun}
-              language={q.language || 'javascript'}
-            />
+            <Suspense fallback={<div className="empty-state">Loading Code Engine...</div>}>
+              <CodeEditor
+                initialCode={q.codeSnippet || '// Write your solution here'}
+                testCases={q.testCases}
+                onRun={handleCodeRun}
+                language={q.language || 'javascript'}
+              />
+            </Suspense>
           </div>
         )}
 
