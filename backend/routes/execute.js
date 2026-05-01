@@ -130,7 +130,7 @@ except Exception as e:
       command = `docker run --rm --network none --memory 256m -v "${tmpDir}":/code python:3.10-alpine python "/code/${fileName}"`;
 
     } else if (language === 'java') {
-      const hasClass = /class\\s+[A-Za-z0-9_]+/.test(code);
+      const hasClass = /(?:public\\s+)?class\\s+[A-Za-z0-9_]+\\s*\\{/.test(code);
       
       let javaRunner = code;
       let runClassName = 'Main' + fileHash.slice(0, 6);
@@ -138,8 +138,8 @@ except Exception as e:
       let javaTestInput = testInput ? testInput.replace(/\[([\d\s,-]*)\]/g, 'new int[]{$1}') : '';
 
       if (hasClass) {
-        const pubClassMatch = code.match(/public\\s+class\\s+([A-Za-z0-9_]+)/);
-        const classMatch = code.match(/class\\s+([A-Za-z0-9_]+)/);
+        const pubClassMatch = code.match(/public\\s+class\\s+([A-Za-z0-9_]+)\\s*\\{/);
+        const classMatch = code.match(/class\\s+([A-Za-z0-9_]+)\\s*\\{/);
         
         if (pubClassMatch) {
             runClassName = pubClassMatch[1];
@@ -173,7 +173,7 @@ except Exception as e:
         }
       } else {
         const imports = [];
-        const codeWithoutImports = code.replace(/import\\s+[^;]+;/g, match => {
+        const codeWithoutImports = code.replace(/import\s+[^;]+;/g, match => {
             imports.push(match);
             return '';
         });
@@ -208,6 +208,7 @@ ${testCode}
       }
 
       await fs.writeFile(filePath, javaRunner);
+      console.log("---- JAVA RUNNER ----\n" + javaRunner);
       const fileName = path.basename(filePath);
       command = `docker run --rm --network none --memory 256m -v "${tmpDir}":/code eclipse-temurin:17-alpine sh -c "javac /code/${fileName} -d /code && java -cp /code ${runClassName}"`;
 
