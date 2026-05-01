@@ -63,6 +63,19 @@ router.post('/join', authenticate, async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+router.get('/active', authenticate, async (req, res) => {
+  try {
+    const battle = await Battle.findOne({
+      $or: [{ creatorId: req.userId }, { participants: req.userId }],
+      status: 'waiting'
+    }).lean();
+    if (!battle) return res.json({ battleId: null });
+    res.json({ battleId: battle._id });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 router.get('/:battleId', authenticate, async (req, res) => {
   try {
     const battle = await Battle.findById(req.params.battleId).lean();

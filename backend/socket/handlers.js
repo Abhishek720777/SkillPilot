@@ -171,6 +171,39 @@ module.exports = function setupSocketHandlers(io) {
       } catch (e) { console.error('battle:timeout error', e.message); }
     });
 
+    socket.on('battle:discard', async ({ battleId }) => {
+      const key = String(battleId);
+      try {
+        const battle = await Battle.findById(battleId);
+        if (!battle || String(battle.creatorId) !== socket.userId) return;
+        if (battle.status !== 'waiting') return; // Can only discard waiting rooms
+        
+        await Battle.findByIdAndDelete(battleId);
+        io.to(`battle:${key}`).emit('battle:discarded');
+        battleRooms.delete(key);
+      } catch (e) { console.error('battle:discard error', e.message); }
+    });
+
+    socket.on('battle:leave', async ({ battleId }) => {
+      const key = String(battleId);
+      try {
+        const battle = await Battle.findById(battleId);
+        if (!battle || battle.status !== 'waiting') return;
+        
+        // Remove from DB participants
+        battle.participants = battle.participants.filter(id => String(id) !== socket.userId);
+        await battle.save();
+        
+        socket.leave(`battle:${key}`);
+        
+        const joinedUsers = await User.find({ _id: { $in: [battle.creatorId, ...battle.participants] } }).select('username avatarColor').lean();
+        io.to(`battle:${key}`).emit('battle:lobby_update', {
+          users: joinedUsers,
+          creatorId: battle.creatorId
+        });
+      } catch (e) { console.error('battle:leave error', e.message); }
+    });
+
     // ── CHAT ──────────────────────────────────────────────────────────────────
 
     socket.on('chat:join', ({ userId }) => {
@@ -191,9 +224,40 @@ module.exports = function setupSocketHandlers(io) {
       } catch (e) { console.error('chat:message error', e.message); }
     });
 
-    socket.on('disconnect', () => {
-      battleRooms.forEach((room, key) => {
+    socket.on('disconnect', async () => {
+      battleRooms.forEach(async (room, key) => {
         if (room.answers[socket.userId] !== undefined) {
+          // If battle is active and they haven't finished, disqualify them
+          if (room.startedAt && !room.answers[socket.userId].completed && !room.concluding) {
+            try {
+              const battleId = key;
+              const battle = await Battle.findById(battleId);
+              const timed = battle?.timerSeconds || 300;
+              
+              room.answers[socket.userId] = { completed: true, score: 0, timeTaken: timed };
+              await BattleResult.findOneAndUpdate(
+                { battleId, userId: socket.userId },
+                { score: 0, timeTaken: timed },
+                { upsert: true }
+              );
+
+              const u = await User.findById(socket.userId).select('username').lean();
+              socket.to(`battle:${key}`).emit('battle:player_finished', { 
+                 userId: socket.userId, username: u?.username, score: 0, timeTaken: timed 
+              });
+
+              const allUsers = Object.keys(room.answers);
+              const uniqueParticipants = [...new Set((battle?.participants || []).map(id => String(id)))];
+              const expectedCount = uniqueParticipants.length + 1;
+              const allDone = allUsers.length >= expectedCount && allUsers.every(u => room.answers[u]?.completed);
+              
+              if (allDone && !room.concluding) {
+                room.concluding = true;
+                if (battle) await concludeBattle(io, battleId, key, battle, room);
+              }
+            } catch (e) { console.error('disconnect disqualify error', e.message); }
+          }
+          
           socket.to(`battle:${key}`).emit('battle:opponent_disconnected', { userId: socket.userId });
         }
       });

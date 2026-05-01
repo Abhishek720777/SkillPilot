@@ -18,7 +18,12 @@ export default function BattlePage() {
   useEffect(() => { api.get('/quiz/topics').then(r => setTopics(r.data)); }, []);
 
   useEffect(() => {
-  }, [created, navigate]);
+    api.get('/battle/active').then(r => {
+      if (r.data?.battleId) {
+        navigate(`/battle/${r.data.battleId}`, { replace: true });
+      }
+    }).catch(e => console.error(e));
+  }, [navigate]);
 
   const copy = (code) => {
     navigator.clipboard.writeText(code).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); });

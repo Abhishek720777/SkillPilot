@@ -67,6 +67,11 @@ export default function BattleRoomPage() {
 
     socket.on('battle:results', () => navigate(`/battle/${battleId}/result`));
     
+    socket.on('battle:discarded', () => {
+      alert('The host has discarded this room.');
+      navigate('/battle', { replace: true });
+    });
+    
     // For simplicity, we just remove them if disconnect
     socket.on('battle:opponent_disconnected', ({ userId }) => {
       setLobbyUsers(prev => prev.filter(u => String(u._id) !== String(userId)));
@@ -77,6 +82,7 @@ export default function BattleRoomPage() {
       socket.off('battle:start'); 
       socket.off('battle:player_finished'); 
       socket.off('battle:results'); 
+      socket.off('battle:discarded');
       socket.off('battle:opponent_disconnected'); 
     };
   }, [battleId, navigate]);
@@ -164,6 +170,19 @@ export default function BattleRoomPage() {
     getSocket().emit('battle:admin_start', { battleId });
   };
 
+  const handleDiscard = () => {
+    if (window.confirm('Are you sure you want to discard this room?')) {
+      getSocket().emit('battle:discard', { battleId });
+    }
+  };
+
+  const handleLeave = () => {
+    if (window.confirm('Are you sure you want to leave this room?')) {
+      getSocket().emit('battle:leave', { battleId });
+      navigate('/battle', { replace: true });
+    }
+  };
+
   const fmt = s => `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
   const isLow = timeLeft !== null && timeLeft <= 30;
   const q = questions[current];
@@ -218,16 +237,28 @@ export default function BattleRoomPage() {
             ))}
           </div>
 
-          {isCreator ? (
-            <button className="btn btn-primary" style={{width:'100%',justifyContent:'center'}} onClick={handleAdminStart}>
-              Start Battle Now
-            </button>
-          ) : (
-            <div style={{display:'flex',alignItems:'center',gap:8,color:'var(--text-muted)',fontSize:13}}>
-              <div className="waiting-dots"><span/><span/><span/></div>
-              Waiting for host to start
-            </div>
-          )}
+          <div style={{ display: 'flex', gap: '10px' }}>
+            {isCreator ? (
+              <>
+                <button className="btn btn-outline" style={{ flex: 1, justifyContent: 'center', borderColor: 'var(--error)', color: 'var(--error)' }} onClick={handleDiscard}>
+                  Discard Room
+                </button>
+                <button className="btn btn-primary" style={{ flex: 2, justifyContent: 'center' }} onClick={handleAdminStart}>
+                  Start Battle Now
+                </button>
+              </>
+            ) : (
+              <>
+                <button className="btn btn-outline" style={{ flex: 1, justifyContent: 'center', borderColor: 'var(--error)', color: 'var(--error)' }} onClick={handleLeave}>
+                  Leave Room
+                </button>
+                <div style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, color: 'var(--text-muted)', fontSize: 13, background: 'var(--bg-subtle)', borderRadius: 8 }}>
+                  <div className="waiting-dots"><span/><span/><span/></div>
+                  Waiting for host
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
     );
