@@ -83,8 +83,8 @@ export default function DashboardPage() {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
         <div className="card" style={{ padding: 20 }} >
-          <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 4, color: 'var(--text-primary)' }}>Topic Progression</div>
-          <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 16 }}>Your success rate mapping across individual concepts.</div>
+          <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 4, color: 'var(--text-primary)' }}>Topic Mastery</div>
+          <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 16 }}>Your average accuracy across all attempted quizzes.</div>
           {!stats?.topicPerformance?.length ? (
             <div className="empty-state" style={{ padding: '20px 0' }}>
               <p>Complete challenges to map your skills.</p>
