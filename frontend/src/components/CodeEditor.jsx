@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
 import api from '../api/client';
 
@@ -37,6 +37,19 @@ export default function CodeEditor({ initialCode = '', language: defaultLang = '
   const [output, setOutput] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
   const [passedResult, setPassedResult] = useState(false);
+
+  useEffect(() => {
+    if (testCases?.length > 0 && selectedLang !== 'javascript') {
+      setSelectedLang('javascript');
+    }
+    setCodes({
+      javascript: BOILERPLATE.javascript(initialCode),
+      python:     BOILERPLATE.python(initialCode),
+      java:       BOILERPLATE.java(initialCode),
+    });
+    setOutput(null);
+    setPassedResult(false);
+  }, [initialCode, testCases]);
 
   const currentCode = codes[selectedLang];
 
@@ -108,16 +121,22 @@ export default function CodeEditor({ initialCode = '', language: defaultLang = '
       {/* Language Selector */}
       <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
         <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginRight: 4 }}>Language:</span>
-        {LANGUAGES.map(l => (
+        {LANGUAGES.map(l => {
+          const isExecutionTask = testCases?.length > 0;
+          const isDisabled = isExecutionTask && l.id !== 'javascript';
+          return (
           <button
             key={l.id}
-            onClick={() => handleLangSwitch(l.id)}
+            onClick={() => !isDisabled && handleLangSwitch(l.id)}
+            title={isDisabled ? "Automated testing is only supported in JavaScript for this problem." : ""}
             style={{
               display: 'flex', alignItems: 'center', gap: 6,
               padding: '5px 12px', borderRadius: 20,
               border: `1.5px solid ${selectedLang === l.id ? l.color : 'var(--border)'}`,
               background: selectedLang === l.id ? l.bg : 'transparent',
-              cursor: 'pointer', transition: 'all 0.15s',
+              cursor: isDisabled ? 'not-allowed' : 'pointer',
+              opacity: isDisabled ? 0.4 : 1,
+              transition: 'all 0.15s',
               fontSize: 12, fontWeight: 700,
               color: selectedLang === l.id ? l.color : 'var(--text-muted)',
             }}
@@ -130,7 +149,7 @@ export default function CodeEditor({ initialCode = '', language: defaultLang = '
             }}>{l.icon}</span>
             {l.label}
           </button>
-        ))}
+        )})}
       </div>
 
       {/* Monaco Editor */}
