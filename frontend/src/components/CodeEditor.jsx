@@ -39,9 +39,6 @@ export default function CodeEditor({ initialCode = '', language: defaultLang = '
   const [passedResult, setPassedResult] = useState(false);
 
   useEffect(() => {
-    if (testCases?.length > 0 && selectedLang !== 'javascript') {
-      setSelectedLang('javascript');
-    }
     setCodes({
       javascript: BOILERPLATE.javascript(initialCode),
       python:     BOILERPLATE.python(initialCode),
@@ -121,21 +118,16 @@ export default function CodeEditor({ initialCode = '', language: defaultLang = '
       {/* Language Selector */}
       <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
         <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginRight: 4 }}>Language:</span>
-        {LANGUAGES.map(l => {
-          const isExecutionTask = testCases?.length > 0;
-          const isDisabled = isExecutionTask && l.id !== 'javascript';
-          return (
+        {LANGUAGES.map(l => (
           <button
             key={l.id}
-            onClick={() => !isDisabled && handleLangSwitch(l.id)}
-            title={isDisabled ? "Automated testing is only supported in JavaScript for this problem." : ""}
+            onClick={() => handleLangSwitch(l.id)}
             style={{
               display: 'flex', alignItems: 'center', gap: 6,
               padding: '5px 12px', borderRadius: 20,
               border: `1.5px solid ${selectedLang === l.id ? l.color : 'var(--border)'}`,
               background: selectedLang === l.id ? l.bg : 'transparent',
-              cursor: isDisabled ? 'not-allowed' : 'pointer',
-              opacity: isDisabled ? 0.4 : 1,
+              cursor: 'pointer',
               transition: 'all 0.15s',
               fontSize: 12, fontWeight: 700,
               color: selectedLang === l.id ? l.color : 'var(--text-muted)',
@@ -149,7 +141,7 @@ export default function CodeEditor({ initialCode = '', language: defaultLang = '
             }}>{l.icon}</span>
             {l.label}
           </button>
-        )})}
+        ))}
       </div>
 
       {/* Monaco Editor */}

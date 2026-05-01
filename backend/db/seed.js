@@ -252,7 +252,7 @@ const DATA = {
         q: 'Write a function "reverseArray" that reverses an array in-place.\nExample: reverseArray([1,2,3]) → [3,2,1]',
         opts: [], ans: 1, d: 'medium', exp: 'Use two pointers swapping elements from both ends toward the center.',
         isExecutionTask: true, codeSnippet: 'function reverseArray(arr) {\n  // your code here\n  return arr;\n}',
-        testCases: [{ input: 'JSON.stringify(reverseArray([1,2,3]))', expectedOutput: '"[3,2,1]"' }]
+        testCases: [{ input: 'reverseArray([1,2,3])', expectedOutput: '[3,2,1]' }]
       },
       // Old LinkedList Execution Task
       {
@@ -279,7 +279,7 @@ const DATA = {
         q: 'Write a function "isBalanced" that checks if brackets are balanced.\nExample: isBalanced("({[]})") → true, isBalanced("({)}") → false',
         opts: [], ans: 1, d: 'hard', exp: 'Use a stack: push open brackets, pop on matching close bracket.',
         isExecutionTask: true, codeSnippet: 'function isBalanced(s) {\n  // your code here\n  // return true or false\n}',
-        testCases: [{ input: 'isBalanced("({[]})") === true', expectedOutput: 'true' }, { input: 'isBalanced("({)}") === false', expectedOutput: 'true' }]
+        testCases: [{ input: 'isBalanced("({[]})")', expectedOutput: 'true' }, { input: 'isBalanced("({)}")', expectedOutput: 'false' }]
       },
 
       // NEW Added Execution Tasks (Coding Problems)
@@ -287,25 +287,25 @@ const DATA = {
         q: 'Write a function "twoSum" that returns the [index1, index2] of two numbers in an array that add up to a target.\nExample: twoSum([2,7,11,15], 9) → [0,1]',
         opts: [], ans: 1, d: 'medium', exp: 'Use a Hash Map to store elements and their complement indices for O(n) time.',
         isExecutionTask: true, codeSnippet: 'function twoSum(nums, target) {\n  // your code here\n}',
-        testCases: [{ input: 'JSON.stringify(twoSum([2,7,11,15], 9))', expectedOutput: '"[0,1]"' }, { input: 'JSON.stringify(twoSum([3,2,4], 6))', expectedOutput: '"[1,2]"' }]
+        testCases: [{ input: 'twoSum([2,7,11,15], 9)', expectedOutput: '[0,1]' }, { input: 'twoSum([3,2,4], 6)', expectedOutput: '[1,2]' }]
       },
       {
         q: 'Write a function "isPalindrome" that checks if a string is identical forward and backward.\nExample: isPalindrome("racecar") → true',
         opts: [], ans: 1, d: 'easy', exp: 'Compare the string to its reversed version, or use two pointers converging to the center.',
         isExecutionTask: true, codeSnippet: 'function isPalindrome(str) {\n  // your code here\n}',
-        testCases: [{ input: 'isPalindrome("racecar") === true', expectedOutput: 'true' }, { input: 'isPalindrome("hello") === false', expectedOutput: 'true' }]
+        testCases: [{ input: 'isPalindrome("racecar")', expectedOutput: 'true' }, { input: 'isPalindrome("hello")', expectedOutput: 'false' }]
       },
       {
         q: 'Write a function "containsDuplicate" that returns true if an array contains any duplicate values, else false.\nExample: containsDuplicate([1,2,3,1]) → true',
         opts: [], ans: 1, d: 'easy', exp: 'By turning the array into a Set, you can compare the length of the array to the length of the Set.',
         isExecutionTask: true, codeSnippet: 'function containsDuplicate(nums) {\n  // your code here\n}',
-        testCases: [{ input: 'containsDuplicate([1,2,3,1]) === true', expectedOutput: 'true' }, { input: 'containsDuplicate([5,6,7,8]) === false', expectedOutput: 'true' }]
+        testCases: [{ input: 'containsDuplicate([1,2,3,1])', expectedOutput: 'true' }, { input: 'containsDuplicate([5,6,7,8])', expectedOutput: 'false' }]
       },
       {
         q: 'Write a function "mergeSortedArrays" that takes two sorted arrays and merges them into a single sorted array.\nExample: merge([1,3], [2,4]) → [1,2,3,4]',
         opts: [], ans: 1, d: 'medium', exp: 'Use two pointers from the beginning of each array to iteratively push the lowest value into a new array.',
         isExecutionTask: true, codeSnippet: 'function mergeSortedArrays(arr1, arr2) {\n  // your code here\n}',
-        testCases: [{ input: 'JSON.stringify(mergeSortedArrays([1,3], [2,4]))', expectedOutput: '"[1,2,3,4]"' }]
+        testCases: [{ input: 'mergeSortedArrays([1,3], [2,4])', expectedOutput: '[1,2,3,4]' }]
       },
       {
         q: 'Write a function "fibonacci" that returns the nth fibonacci number.\nExample: fibonacci(4) → 3 (Sequence: 0, 1, 1, 2, 3...)',

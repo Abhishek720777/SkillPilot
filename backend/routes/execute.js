@@ -114,6 +114,8 @@ try:
         print(json.dumps(result))
     elif isinstance(result, bool):
         print(str(result).lower())
+    elif isinstance(result, list):
+        print(json.dumps(result).replace(" ", ""))
     elif result is None:
         print("undefined")
     else:
@@ -133,6 +135,8 @@ except Exception as e:
       let javaRunner = code;
       let runClassName = 'Main' + fileHash.slice(0, 6);
       
+      let javaTestInput = testInput ? testInput.replace(/\[([\d\s,-]*)\]/g, 'new int[]{$1}') : '';
+
       if (hasClass) {
         const pubClassMatch = code.match(/public\\s+class\\s+([A-Za-z0-9_]+)/);
         const classMatch = code.match(/class\\s+([A-Za-z0-9_]+)/);
@@ -150,9 +154,15 @@ except Exception as e:
             javaRunner = code + `\n\nclass ${testRunnerName} {
     public static void main(String[] args) {
         try {
-            Object result = ${testInput};
+            Object result = ${javaTestInput};
             System.out.println("----TEST_RESULT----");
-            System.out.println(result);
+            if (result instanceof int[]) {
+                System.out.println(java.util.Arrays.toString((int[])result).replace(" ", ""));
+            } else if (result instanceof Object[]) {
+                System.out.println(java.util.Arrays.toString((Object[])result).replace(" ", ""));
+            } else {
+                System.out.println(result);
+            }
         } catch (Exception e) {
             System.out.println("----TEST_RESULT----");
             System.out.println(e.getMessage());
@@ -172,9 +182,15 @@ except Exception as e:
         
         const testCode = testInput ? `
         try {
-            Object result = ${testInput};
+            Object result = ${javaTestInput};
             System.out.println("----TEST_RESULT----");
-            System.out.println(result);
+            if (result instanceof int[]) {
+                System.out.println(java.util.Arrays.toString((int[])result).replace(" ", ""));
+            } else if (result instanceof Object[]) {
+                System.out.println(java.util.Arrays.toString((Object[])result).replace(" ", ""));
+            } else {
+                System.out.println(result);
+            }
         } catch (Exception e) {
             System.out.println("----TEST_RESULT----");
             System.out.println(e.getMessage());
