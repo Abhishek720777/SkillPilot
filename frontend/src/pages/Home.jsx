@@ -55,25 +55,25 @@ const Home = () => {
             <div className="hero-code-mockup">
               <div className="hcode-header">
                 <div className="hcode-dots">
-                   <span className="hcode-dot hcode-dot-red" />
-                   <span className="hcode-dot hcode-dot-yel" />
-                   <span className="hcode-dot hcode-dot-grn" />
+                  <span className="hcode-dot hcode-dot-red" />
+                  <span className="hcode-dot hcode-dot-yel" />
+                  <span className="hcode-dot hcode-dot-grn" />
                 </div>
                 <div className="hcode-tab">Solution.java</div>
                 <div className="hcode-timer">00:42</div>
               </div>
               <div className="hcode-body">
                 <pre><code>
-<span className="code-kw">class</span> <span className="code-class">Solution</span> {'{'}<br/>
-{'  '}<span className="code-kw">public boolean</span> <span className="code-fn">isPalindrome</span>(<span className="code-class">String</span> <span className="code-var">s</span>) {'{'}<br/>
-{'    '}<span className="code-kw">int</span> left = <span className="code-num">0</span>, right = <span className="code-var">s</span>.<span className="code-fn">length</span>() - <span className="code-num">1</span>;<br/>
-{'    '}<span className="code-kw">while</span> (left {'<'} right) {'{'}<br/>
-{'      '}<span className="code-kw">if</span> (<span className="code-var">s</span>.<span className="code-fn">charAt</span>(left++) != <span className="code-var">s</span>.<span className="code-fn">charAt</span>(right--))<br/>
-{'        '}<span className="code-kw">return false</span>;<br/>
-{'    '}{'}'}<br/>
-{'    '}<span className="code-kw">return true</span>;<br/>
-{'  '}{'}'}<br/>
-{'}'}
+                  <span className="code-kw">class</span> <span className="code-class">Solution</span> {'{'}<br />
+                  {'  '}<span className="code-kw">public boolean</span> <span className="code-fn">isPalindrome</span>(<span className="code-class">String</span> <span className="code-var">s</span>) {'{'}<br />
+                  {'    '}<span className="code-kw">int</span> left = <span className="code-num">0</span>, right = <span className="code-var">s</span>.<span className="code-fn">length</span>() - <span className="code-num">1</span>;<br />
+                  {'    '}<span className="code-kw">while</span> (left {'<'} right) {'{'}<br />
+                  {'      '}<span className="code-kw">if</span> (<span className="code-var">s</span>.<span className="code-fn">charAt</span>(left++) != <span className="code-var">s</span>.<span className="code-fn">charAt</span>(right--))<br />
+                  {'        '}<span className="code-kw">return false</span>;<br />
+                  {'    '}{'}'}<br />
+                  {'    '}<span className="code-kw">return true</span>;<br />
+                  {'  '}{'}'}<br />
+                  {'}'}
                 </code></pre>
               </div>
               <div className="hcode-footer">
@@ -299,7 +299,7 @@ const Home = () => {
           <h2 className="cta-h2">
             Ready to find out
             <br />
-            where you really stand?
+            where you stand?
           </h2>
           <Link to="/signup" className="hero-cta">
             Get started <ArrowRight size={16} />
@@ -314,12 +314,11 @@ const Home = () => {
             <span>SkillPilot</span>
           </div>
           <div className="hf-links">
-            <a href="https://github.com/Abhishek720777/SkillPilot" target="_blank" rel="noreferrer" style={{color: 'inherit', textDecoration: 'none'}}>GitHub</a>
-            <span>About Project</span>
+            <a href="https://github.com/Abhishek720777/SkillPilot" target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>GitHub</a>
             <span>Developer Portfolio</span>
             <span>Contact</span>
           </div>
-          <p className="hf-copy">© 2026 SkillPilot. A student project.</p>
+          <p className="hf-copy">© 2026 SkillPilot.</p>
         </div>
       </footer>
     </div>
