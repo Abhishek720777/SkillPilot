@@ -46,7 +46,7 @@ const Home = () => {
               A real-time quiz platform for engineers who want sharp skills and
               sharper instincts.
             </p>
-            <Link to="/signup" className="hero-cta">
+            <Link to="/login" className="hero-cta">
               Start Learning <ArrowRight size={16} />
             </Link>
           </div>
