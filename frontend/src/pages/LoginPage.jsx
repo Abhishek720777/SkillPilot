@@ -21,7 +21,9 @@ export default function LoginPage() {
       login(data.user);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.error || 'Invalid credentials.');
+      const errData = err.response?.data?.error;
+      const msg = typeof errData === 'string' ? errData : (errData?.message || 'Invalid credentials.');
+      setError(msg);
     } finally { setLoading(false); }
   };
 
@@ -97,7 +99,6 @@ export default function LoginPage() {
                 theme="outline"
                 size="large"
                 shape="rectangular"
-                width="100%"
               />
             </div>
           </form>

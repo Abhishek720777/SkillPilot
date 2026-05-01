@@ -42,7 +42,9 @@ export default function RegisterPage() {
       login(data.user);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.error || 'Registration failed.');
+      const errData = err.response?.data?.error;
+      const msg = typeof errData === 'string' ? errData : (errData?.message || 'Registration failed.');
+      setError(msg);
     } finally { setLoading(false); }
   };
 
@@ -138,7 +140,6 @@ export default function RegisterPage() {
                 theme="outline"
                 size="large"
                 shape="rectangular"
-                width="100%"
                 text="signup_with"
               />
             </div>
