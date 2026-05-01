@@ -312,14 +312,90 @@ const DATA = {
         opts: [], ans: 1, d: 'medium', exp: 'Can be done recursively, recursively with memoization, or iteratively.',
         isExecutionTask: true, codeSnippet: 'function fibonacci(n) {\n  // your code here\n}',
         testCases: [{ input: 'fibonacci(4)', expectedOutput: '3' }, { input: 'fibonacci(10)', expectedOutput: '55' }]
+      },
+      {
+        q: 'Write a function "factorial" that computes the factorial of n.\nExample: factorial(5) → 120',
+        opts: [], ans: 1, d: 'easy', exp: 'n! = n * (n-1) * ... * 1. Base case: factorial(0) = 1.',
+        isExecutionTask: true, codeSnippet: 'function factorial(n) {\n  // your code here\n}',
+        testCases: [{ input: 'factorial(5)', expectedOutput: '120' }, { input: 'factorial(0)', expectedOutput: '1' }]
+      },
+      {
+        q: 'Write a function "maxSubArray" that finds the contiguous subarray with the largest sum.\\nExample: maxSubArray([-2,1,-3,4,-1,2,1,-5,4]) → 6',
+        opts: [], ans: 1, d: 'hard', exp: "Use Kadane's algorithm to keep track of the current maximum subarray sum.",
+        isExecutionTask: true, codeSnippet: 'function maxSubArray(nums) {\n  // your code here\n}',
+        testCases: [{ input: 'maxSubArray([-2,1,-3,4,-1,2,1,-5,4])', expectedOutput: '6' }, { input: 'maxSubArray([1])', expectedOutput: '1' }]
+      },
+      {
+        q: 'Write a function "removeDuplicates" that removes duplicates from a sorted array in-place and returns the new length.\nExample: removeDuplicates([1,1,2]) → 2',
+        opts: [], ans: 1, d: 'medium', exp: 'Use a two-pointer approach to overwrite duplicates.',
+        isExecutionTask: true, codeSnippet: 'function removeDuplicates(nums) {\n  // your code here\n}',
+        testCases: [{ input: 'removeDuplicates([1,1,2])', expectedOutput: '2' }, { input: 'removeDuplicates([0,0,1,1,1,2,2,3,3,4])', expectedOutput: '5' }]
+      },
+      {
+        q: 'Write a function "missingNumber" that finds the missing number in an array of size n containing numbers from 0 to n.\nExample: missingNumber([3,0,1]) → 2',
+        opts: [], ans: 1, d: 'easy', exp: 'Calculate the expected sum using n*(n+1)/2 and subtract the actual array sum.',
+        isExecutionTask: true, codeSnippet: 'function missingNumber(nums) {\n  // your code here\n}',
+        testCases: [{ input: 'missingNumber([3,0,1])', expectedOutput: '2' }, { input: 'missingNumber([0,1])', expectedOutput: '2' }]
       }
     ]
   },
+  'Web Development': {
+    'HTML and CSS': [
+      { q: 'What does HTML stand for?', opts: ['Hyper Text Markup Language', 'Home Tool Markup Language', 'Hyperlinks and Text Markup Language', 'Hyper Tool Markup Language'], ans: 0, d: 'easy', exp: 'HTML is Hyper Text Markup Language.' },
+      { q: 'Which CSS property controls text size?', opts: ['font-style', 'text-size', 'font-size', 'text-style'], ans: 2, d: 'easy', exp: 'font-size controls the size of the text.' },
+      { q: 'How do you make a list that lists its items with squares?', opts: ['list-type: square;', 'list-style-type: square;', 'type: square;', 'list: square;'], ans: 1, d: 'medium', exp: 'list-style-type: square; is the correct CSS property.' },
+      { q: 'What is the correct HTML element for the largest heading?', opts: ['<heading>', '<h6>', '<head>', '<h1>'], ans: 3, d: 'easy', exp: '<h1> defines the most important heading.' },
+      { q: 'What is the default value of the position property?', opts: ['relative', 'fixed', 'absolute', 'static'], ans: 3, d: 'medium', exp: 'Elements are positioned static by default.' },
+      { q: 'How do you select an element with id "demo"?', opts: ['#demo', '.demo', 'demo', '*demo'], ans: 0, d: 'easy', exp: '# is the id selector in CSS.' },
+      { q: 'Which HTML attribute is used to define inline styles?', opts: ['font', 'class', 'styles', 'style'], ans: 3, d: 'easy', exp: 'The style attribute is used to specify inline styles.' },
+      { q: 'What is the correct CSS syntax to make all the <p> elements bold?', opts: ['p {text-size:bold;}', 'p {font-weight:bold;}', '<p style="text-size:bold;">', 'p {font-style:bold;}'], ans: 1, d: 'medium', exp: 'font-weight:bold; makes text bold.' },
+      { q: 'Which property is used to change the background color?', opts: ['bgcolor', 'color', 'background-color', 'background'], ans: 2, d: 'easy', exp: 'background-color is used for background color.' },
+      { q: 'How do you display hyperlinks without an underline?', opts: ['a {text-decoration:none;}', 'a {underline:none;}', 'a {decoration:no-underline;}', 'a {text-decoration:no-underline;}'], ans: 0, d: 'medium', exp: 'text-decoration:none removes the underline.' }
+    ],
+    'JavaScript': [
+      { q: 'Inside which HTML element do we put the JavaScript?', opts: ['<js>', '<javascript>', '<script>', '<scripting>'], ans: 2, d: 'easy', exp: '<script> tag is used to embed client-side scripts.' },
+      { q: 'How do you write "Hello World" in an alert box?', opts: ['msg("Hello World");', 'alert("Hello World");', 'msgBox("Hello World");', 'alertBox("Hello World");'], ans: 1, d: 'easy', exp: 'alert() displays an alert box.' },
+      { q: 'How do you create a function in JavaScript?', opts: ['function = myFunction()', 'function myFunction()', 'function:myFunction()', 'create myFunction()'], ans: 1, d: 'easy', exp: 'function myFunction() defines a function.' },
+      { q: 'How to write an IF statement in JavaScript?', opts: ['if i = 5 then', 'if i == 5 then', 'if (i == 5)', 'if i = 5'], ans: 2, d: 'easy', exp: 'if (condition) is the correct syntax.' },
+      { q: 'How does a FOR loop start?', opts: ['for (i = 0; i <= 5)', 'for (i = 0; i <= 5; i++)', 'for i = 1 to 5', 'for (i <= 5; i++)'], ans: 1, d: 'medium', exp: 'for (initialization; condition; increment)' },
+      { q: 'What is the correct way to write a JavaScript array?', opts: ['var colors = 1 = ("red"), 2 = ("green")', 'var colors = "red", "green"', 'var colors = (1:"red", 2:"green")', 'var colors = ["red", "green"]'], ans: 3, d: 'easy', exp: 'Arrays use square brackets [].' },
+      { q: 'Which event occurs when the user clicks on an HTML element?', opts: ['onchange', 'onmouseclick', 'onmouseover', 'onclick'], ans: 3, d: 'easy', exp: 'onclick event fires on a mouse click.' },
+      { q: 'How do you declare a JavaScript variable?', opts: ['v carName;', 'variable carName;', 'var carName;', 'None of the above'], ans: 2, d: 'easy', exp: 'var, let, or const declare variables.' },
+      { q: 'Which operator is used to assign a value to a variable?', opts: ['*', '-', '=', 'x'], ans: 2, d: 'easy', exp: '= is the assignment operator.' },
+      { q: 'What will typeof [] return?', opts: ['"array"', '"object"', '"list"', '"undefined"'], ans: 1, d: 'medium', exp: 'Arrays are a special type of objects in JavaScript.' }
+    ],
+    'React': [
+      { q: 'What is React?', opts: ['A backend framework', 'A JavaScript library for building user interfaces', 'A database', 'A language'], ans: 1, d: 'easy', exp: 'React is a library for UIs.' },
+      { q: 'Which command is used to create a new React app?', opts: ['npx create-react-app my-app', 'npm install react', 'npm create react-app', 'npx init react'], ans: 0, d: 'easy', exp: 'npx create-react-app builds the boilerplate.' },
+      { q: 'What is JSX?', opts: ['JavaScript XML', 'Java Syntax Extension', 'JSON X', 'JavaScript X'], ans: 0, d: 'easy', exp: 'JSX stands for JavaScript XML.' },
+      { q: 'What hook is used to manage state in a functional component?', opts: ['useEffect', 'useContext', 'useState', 'useReducer'], ans: 2, d: 'easy', exp: 'useState allows state management in functional components.' },
+      { q: 'How do you pass data from a parent to a child component?', opts: ['Using State', 'Using Props', 'Using Context', 'Using Redux'], ans: 1, d: 'easy', exp: 'Props (properties) pass data downwards.' },
+      { q: 'What is the virtual DOM?', opts: ['A direct copy of the real DOM', 'A lightweight JavaScript representation of the DOM', 'A plugin', 'A new HTML standard'], ans: 1, d: 'medium', exp: 'Virtual DOM optimizes rendering by batching updates.' },
+      { q: 'Which hook performs side effects?', opts: ['useState', 'useMemo', 'useEffect', 'useRef'], ans: 2, d: 'medium', exp: 'useEffect handles side effects like data fetching.' },
+      { q: 'What is the purpose of the key prop in a list?', opts: ['To style the element', 'To uniquely identify elements for efficient re-rendering', 'To pass data', 'To bind an event'], ans: 1, d: 'medium', exp: 'Keys help React identify which items have changed.' },
+      { q: 'Can a functional component have state?', opts: ['No, only class components', 'Yes, using hooks', 'Yes, by extending React.Component', 'Only with Redux'], ans: 1, d: 'easy', exp: 'Hooks like useState allow functional components to have state.' },
+      { q: 'What does React.StrictMode do?', opts: ['Prevents errors', 'Highlights potential problems in an application', 'Speeds up rendering', 'Minifies code'], ans: 1, d: 'medium', exp: 'StrictMode checks for unsafe lifecycles and legacy API usage.' }
+    ]
+  }
 };
+
+const extraData = require('./extraSeedData.js');
 
 async function seed() {
   await mongoose.connect(uri);
   console.log('Connected. Seeding...');
+
+  // Merge extraData into DATA
+  for (const topic in extraData) {
+    if (!DATA[topic]) DATA[topic] = {};
+    for (const subtopic in extraData[topic]) {
+      if (!DATA[topic][subtopic]) {
+        DATA[topic][subtopic] = extraData[topic][subtopic];
+      } else {
+        DATA[topic][subtopic].push(...extraData[topic][subtopic]);
+      }
+    }
+  }
 
   await Topic.deleteMany();
   await Subtopic.deleteMany();

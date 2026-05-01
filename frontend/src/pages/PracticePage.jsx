@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import api from '../api/client';
 
 const TOPIC_META = {
-  Java:     { color: '#E85D04', bg: '#FFF4E6', border: '#FFD8A8', desc: 'OOP, Collections, Exceptions' },
-  Python:   { color: '#2D6A4F', bg: '#E9F5EE', border: '#B7DFC8', desc: 'Basics, OOP, Data Structures' },
-  Database: { color: '#1565C0', bg: '#E3F0FF', border: '#AACCF5', desc: 'SQL Joins, Indexing, Normalization' },
-  Aptitude: { color: '#6B21A8', bg: '#F3E8FF', border: '#D8B4FE', desc: 'Quantitative, Logical Reasoning' },
+  Java:              { color: '#E85D04', bg: '#FFF4E6', border: '#FFD8A8', desc: 'OOP, Collections, Exceptions' },
+  Python:            { color: '#2D6A4F', bg: '#E9F5EE', border: '#B7DFC8', desc: 'Basics, OOP, Data Structures' },
+  Database:          { color: '#1565C0', bg: '#E3F0FF', border: '#AACCF5', desc: 'SQL Joins, Indexing, Normalization' },
+  Aptitude:          { color: '#6B21A8', bg: '#F3E8FF', border: '#D8B4FE', desc: 'Quantitative, Logical Reasoning' },
+  DSA:               { color: '#C2185B', bg: '#FCE4EC', border: '#F8BBD0', desc: 'Arrays, Lists, Trees, Graphs' },
+  'Web Development': { color: '#00838F', bg: '#E0F7FA', border: '#B2EBF2', desc: 'HTML/CSS, JavaScript, React' },
 };
 
 export default function PracticePage() {
