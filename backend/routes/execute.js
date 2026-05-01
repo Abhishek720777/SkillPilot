@@ -154,7 +154,7 @@ except Exception as e:
             javaRunner = code + `\n\nclass ${testRunnerName} {
     public static void main(String[] args) {
         try {
-            Object result = ${javaTestInput};
+            Object result = ${runClassName}.${javaTestInput};
             System.out.println("----TEST_RESULT----");
             if (result instanceof int[]) {
                 System.out.println(java.util.Arrays.toString((int[])result).replace(" ", ""));
