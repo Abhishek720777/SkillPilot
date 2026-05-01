@@ -137,47 +137,55 @@ router.get('/stats', authenticate, async (req, res) => {
       }
     }
 
-    // Topic performance
+    // Topic & Subtopic performance in a single pass
     const topicMap = {};
-    for (const s of sessions) {
-      const key = String(s.topicId?._id || s.topicId);
-      if (!topicMap[key]) topicMap[key] = { name: s.topicId?.name || '', scores: [], count: 0 };
-      topicMap[key].scores.push(s.score / s.total);
-      topicMap[key].count++;
+    const subtopicMap = {};
+    const dateMap = {};
+
+    for (let i = sessions.length - 1; i >= 0; i--) {
+      const s = sessions[i];
+      const tId = String(s.topicId?._id || s.topicId);
+      const stId = String(s.subtopicId?._id || s.subtopicId);
+      const ratio = s.score / (s.total || 1);
+
+      // Topic
+      if (!topicMap[tId]) topicMap[tId] = { name: s.topicId?.name || '', totalRatio: 0, count: 0 };
+      topicMap[tId].totalRatio += ratio;
+      topicMap[tId].count++;
+
+      // Subtopic
+      if (!subtopicMap[stId]) subtopicMap[stId] = { name: s.subtopicId?.name || '', tName: s.topicId?.name || '', totalRatio: 0, count: 0 };
+      subtopicMap[stId].totalRatio += ratio;
+      subtopicMap[stId].count++;
+
+      // Progress (last 14 days)
+      const d = s.completedAt?.toISOString?.()?.slice(0, 10);
+      if (d) {
+        if (!dateMap[d]) dateMap[d] = { totalRatio: 0, count: 0 };
+        dateMap[d].totalRatio += ratio;
+        dateMap[d].count++;
+      }
     }
+
     const topicPerformance = Object.values(topicMap).map(t => ({
-      topic: t.name, percentage: Math.round((t.scores.reduce((a,b)=>a+b,0)/t.scores.length)*100), count: t.count
+      topic: t.name, percentage: Math.round((t.totalRatio / t.count) * 100), count: t.count
     }));
 
-    // Weak areas (Cutoff at strictly < 60%)
-    const subtopicMap = {};
-    for (const s of sessions) {
-      const key = String(s.subtopicId?._id || s.subtopicId);
-      if (!subtopicMap[key]) subtopicMap[key] = { subtopic: s.subtopicId?.name||'', topic: s.topicId?.name||'', scores: [] };
-      subtopicMap[key].scores.push(s.score / s.total);
-    }
     const weakAreas = Object.values(subtopicMap)
-      .map(s => ({ subtopic: s.subtopic, topic: s.topic, percentage: Math.round((s.scores.reduce((a,b)=>a+b,0)/s.scores.length)*100) }))
+      .map(s => ({ subtopic: s.name, topic: s.tName, percentage: Math.round((s.totalRatio / s.count) * 100) }))
       .filter(s => s.percentage < 60)
-      .sort((a,b) => a.percentage - b.percentage);
+      .sort((a, b) => a.percentage - b.percentage)
+      .slice(0, 5);
 
-    // Recent activity
-    const recentActivity = sessions.sort((a,b) => new Date(b.completedAt)-new Date(a.completedAt)).slice(0,5).map(s => ({
+    const recentActivity = sessions.slice(0, 5).map(s => ({
       id: s._id, score: s.score, total: s.total, timeTaken: s.timeTaken,
       completedAt: s.completedAt, topicName: s.topicId?.name, subtopicName: s.subtopicId?.name,
     }));
 
-    // Progress data
-    const dateMap = {};
-    for (const s of sessions) {
-      const d = s.completedAt?.toISOString?.()?.slice(0,10) || '';
-      if (!dateMap[d]) dateMap[d] = [];
-      dateMap[d].push(s.score / s.total);
-    }
     const progressData = Object.entries(dateMap)
-      .sort((a,b) => a[0].localeCompare(b[0]))
+      .sort((a, b) => a[0].localeCompare(b[0]))
       .slice(-14)
-      .map(([date, scores]) => ({ date, avg_acc: scores.reduce((a,b)=>a+b,0)/scores.length }));
+      .map(([date, d]) => ({ date, avg_acc: d.totalRatio / d.count }));
 
     res.json({ totalQuizzes, totalBattles, battleWins, battleLosses: Math.max(0, totalBattles-battleWins),
        winRate: totalBattles ? Math.round((battleWins / totalBattles) * 100) : 0, 

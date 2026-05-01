@@ -8,5 +8,6 @@ const battleResultSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 battleResultSchema.index({ battleId: 1, userId: 1 }, { unique: true });
+battleResultSchema.index({ userId: 1 });
 
 module.exports = mongoose.model('BattleResult', battleResultSchema);

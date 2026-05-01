@@ -28,4 +28,7 @@ const quizSessionSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
+quizSessionSchema.index({ userId: 1 });
+quizSessionSchema.index({ userId: 1, completedAt: -1 });
+
 module.exports = mongoose.model("QuizSession", quizSessionSchema);
