@@ -15,6 +15,7 @@ import LeaderboardPage from "./pages/LeaderboardPage";
 import ChatPage from "./pages/ChatPage";
 import ProfilePage from "./pages/ProfilePage";
 import Home from "./pages/Home";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function ProtectedRoute({ children }) {
   const { user } = useAuth();
@@ -83,7 +84,7 @@ export default function App() {
             <Route path="/chat/:userId" element={<ChatPage />} />
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

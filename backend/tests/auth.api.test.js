@@ -33,7 +33,7 @@ afterEach(async () => {
 describe('Auth API Integration Tests', () => {
   
   describe('POST /api/auth/register', () => {
-    it('should register a new user successfully and return a token', async () => {
+    it('should register a new user successfully and return a token in cookie', async () => {
       const res = await request(app)
         .post('/api/auth/register')
         .send({
@@ -43,10 +43,13 @@ describe('Auth API Integration Tests', () => {
         });
 
       // Verify status code
-      expect(res.statusCode).toBe(200); // Express json() defaults to 200 unless 201 is set
+      expect(res.statusCode).toBe(200);
+      
+      // Verify cookie
+      expect(res.headers['set-cookie']).toBeDefined();
+      expect(res.headers['set-cookie'][0]).toContain('token=');
       
       // Verify response body shape
-      expect(res.body).toHaveProperty('token');
       expect(res.body.user).toHaveProperty('id');
       expect(res.body.user).toHaveProperty('username', 'testdev');
       expect(res.body.user).toHaveProperty('email', 'testdev@test.com');
@@ -99,7 +102,7 @@ describe('Auth API Integration Tests', () => {
         });
 
       expect(res.statusCode).toBe(200);
-      expect(res.body).toHaveProperty('token');
+      expect(res.headers['set-cookie'][0]).toContain('token=');
       expect(res.body.user.username).toBe('login_hero');
     });
 

@@ -50,6 +50,23 @@ export default function QuizPage() {
     return () => { window.history.pushState = origPush; };
   }, [answers, sessionId, startTime]);
 
+  // ── Anti-Cheat: Visibility Change (New Tab) ──────────────────────────
+  useEffect(() => {
+    if (isFinished.current) return;
+    const handleVisibility = () => {
+      if (document.visibilityState === 'hidden' && !isFinished.current) {
+        alert('Anti-cheat: Switching tabs is not allowed during a session. You have been disqualified.');
+        isFinished.current = true;
+        api.post(`/quiz/session/${sessionId}/submit`, {
+          answers: {}, // 0 score
+          time_taken: Math.round((Date.now() - startTime) / 1000),
+        }).finally(() => navigate(`/quiz/${sessionId}/result`, { replace: true }));
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, [sessionId, startTime, navigate]);
+
   // ── Handlers ─────────────────────────────────────────────────────────────
   const handleSelect = useCallback((i) => {
     if (!q || q.isExecutionTask) return;
@@ -92,7 +109,9 @@ export default function QuizPage() {
   const answeredCount = Object.keys(answers).length;
 
   return (
-    <div className="quiz-wrap">
+    <div className="quiz-wrap no-select" 
+      onContextMenu={e => e.preventDefault()}
+      onCopy={e => e.preventDefault()}>
       {/* Header */}
       <div className="quiz-header">
         <span className="quiz-counter">Question {current+1} of {total}</span>

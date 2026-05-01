@@ -142,6 +142,19 @@ export default function BattleRoomPage() {
     return () => { window.history.pushState = origPush; };
   }, [status, submitBattle]);
 
+  // ── Anti-Cheat: Visibility Change (New Tab) ──────────────────────────
+  useEffect(() => {
+    if (status !== 'active' || isFinished.current) return;
+    const handleVisibility = () => {
+      if (document.visibilityState === 'hidden' && !isFinished.current) {
+        alert('Anti-cheat: Switching tabs is not allowed during a battle. You have been disqualified.');
+        submitBattle({}); // Empty answers = 0 score
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, [status, submitBattle]);
+
   // Save answer without auto-advancing — player manually navigates
   const handleSelect = (i) => {
     const q = questions[current];
@@ -302,7 +315,10 @@ export default function BattleRoomPage() {
   );
 
   return (
-    <div className="battle-room" style={{ maxWidth: 900, margin: '0 auto', width: '100%' }}>
+    <div className="battle-room no-select" 
+      style={{ maxWidth: 900, margin: '0 auto', width: '100%' }}
+      onContextMenu={e => e.preventDefault()}
+      onCopy={e => e.preventDefault()}>
       {/* Players bar */}
       <div className="battle-players-bar" style={{marginBottom: 20}}>
         <div className="battle-player-side">
