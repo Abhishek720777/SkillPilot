@@ -4,7 +4,8 @@ let socket = null;
 
 export function getSocket() {
   if (!socket) {
-    socket = io('/', {
+    const url = import.meta.env.VITE_API_URL || '/';
+    socket = io(url, {
       withCredentials: true,
       autoConnect: true,
     });

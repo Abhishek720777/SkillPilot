@@ -8,12 +8,15 @@ const connectDB = require('./db/connect');
 
 const app = express();
 const server = http.createServer(app);
+
+const frontendOrigin = process.env.FRONTEND_URL || 'http://localhost:5173';
+
 const io = new Server(server, {
-  cors: { origin: 'http://localhost:5173', methods: ['GET','POST'], credentials: true }
+  cors: { origin: frontendOrigin, methods: ['GET','POST'], credentials: true }
 });
 
 app.set('io', io);
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors({ origin: frontendOrigin, credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
 

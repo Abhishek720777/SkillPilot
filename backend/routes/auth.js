@@ -17,7 +17,7 @@ router.post('/register', async (req, res) => {
     const avatarColor = colors[Math.floor(Math.random() * colors.length)];
     const user = await User.create({ username, email, passwordHash, avatarColor });
     const token = jwt.sign({ userId: user._id, username }, JWT_SECRET, { expiresIn: '7d' });
-    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 });
+    res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 7 * 24 * 60 * 60 * 1000 });
     res.json({ user: { id: user._id, profileId: user.profileId, username, email, avatarColor, exp: user.exp || 0 } });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -31,7 +31,7 @@ router.post('/login', async (req, res) => {
     const valid = await bcrypt.compare(password, user.passwordHash);
     if (!valid) return res.status(401).json({ error: 'Invalid credentials.' });
     const token = jwt.sign({ userId: user._id, username: user.username }, JWT_SECRET, { expiresIn: '7d' });
-    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 });
+    res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 7 * 24 * 60 * 60 * 1000 });
     res.json({ user: { id: user._id, profileId: user.profileId, username: user.username, email: user.email, avatarColor: user.avatarColor, exp: user.exp || 0 } });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
@@ -190,7 +190,7 @@ router.post('/google', async (req, res) => {
     }
     
     const token = jwt.sign({ userId: user._id, username: user.username }, JWT_SECRET, { expiresIn: '7d' });
-    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', maxAge: 7 * 24 * 60 * 60 * 1000 });
+    res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 7 * 24 * 60 * 60 * 1000 });
     res.json({ user: { id: user._id, profileId: user.profileId, username: user.username, email: user.email, avatarColor: user.avatarColor, exp: user.exp || 0 } });
   } catch (e) {
     console.error(e);
