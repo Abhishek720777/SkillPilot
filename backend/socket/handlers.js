@@ -184,11 +184,14 @@ module.exports = function setupSocketHandlers(io) {
       } catch (e) { console.error('battle:discard error', e.message); }
     });
 
-    socket.on('battle:leave', async ({ battleId }) => {
+    socket.on('battle:leave', async ({ battleId }, ack) => {
       const key = String(battleId);
       try {
         const battle = await Battle.findById(battleId);
-        if (!battle || battle.status !== 'waiting') return;
+        if (!battle || battle.status !== 'waiting') {
+          if (ack) ack();
+          return;
+        }
         
         // Remove from DB participants
         battle.participants = battle.participants.filter(id => String(id) !== socket.userId);
@@ -201,7 +204,12 @@ module.exports = function setupSocketHandlers(io) {
           users: joinedUsers,
           creatorId: battle.creatorId
         });
-      } catch (e) { console.error('battle:leave error', e.message); }
+
+        if (ack) ack();
+      } catch (e) {
+        console.error('battle:leave error', e.message);
+        if (ack) ack();
+      }
     });
 
     // ── CHAT ──────────────────────────────────────────────────────────────────

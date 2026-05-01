@@ -178,8 +178,9 @@ export default function BattleRoomPage() {
 
   const handleLeave = () => {
     if (window.confirm('Are you sure you want to leave this room?')) {
-      getSocket().emit('battle:leave', { battleId });
-      navigate('/battle', { replace: true });
+      getSocket().emit('battle:leave', { battleId }, () => {
+        navigate('/battle', { replace: true });
+      });
     }
   };
 
