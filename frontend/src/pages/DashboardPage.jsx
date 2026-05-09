@@ -3,14 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/client';
 
-// Lazy load heavy chart library
-const LineChart = lazy(() => import('recharts').then(m => ({ default: m.LineChart })));
-const Line = lazy(() => import('recharts').then(m => ({ default: m.Line })));
-const XAxis = lazy(() => import('recharts').then(m => ({ default: m.XAxis })));
-const YAxis = lazy(() => import('recharts').then(m => ({ default: m.YAxis })));
-const Tooltip = lazy(() => import('recharts').then(m => ({ default: m.Tooltip })));
-const ResponsiveContainer = lazy(() => import('recharts').then(m => ({ default: m.ResponsiveContainer })));
-const CartesianGrid = lazy(() => import('recharts').then(m => ({ default: m.CartesianGrid })));
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
 export default function DashboardPage() {
   const { user, updateUser } = useAuth();
@@ -151,7 +144,6 @@ export default function DashboardPage() {
             <div className="empty-state" style={{ padding: '20px 0' }}><p>Complete quizzes and battles to begin progressing your EXP rating</p></div>
           ) : (
             <div style={{ height: 160 }}>
-              <Suspense fallback={<div className="spinner spinner-primary" style={{ width: 20, height: 20, margin: '60px auto' }} />}>
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={expData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
@@ -166,7 +158,6 @@ export default function DashboardPage() {
                       activeDot={{ r: 6 }} />
                   </LineChart>
                 </ResponsiveContainer>
-              </Suspense>
             </div>
           )}
         </div>
